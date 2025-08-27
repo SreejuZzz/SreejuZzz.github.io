@@ -1,14 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <title>Public Key</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Public Key</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Download My Public Key</h1>
-  <p>
-    <a href="sreejuzzz.pub" download>Click here to download my .pub file</a>
-  </p>
+  <main class="container">
+    <header class="head">
+      <h1 class="title">My Public Key</h1>
+      <p class="subtitle">You can copy it directly or download the file.</p>
+    </header>
+
+    <!-- Public key section -->
+    <section class="card">
+      <pre class="pubkey" id="pubkey">
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILYVphlV3ZxL3pY8/2OPq4WWiB/ieK719iAYZnefize8 sreejuzzz@Sreejiths-Mac-mini.local
+      </pre>
+      <div class="actions">
+        <button id="copyKeyBtn" class="btn ghost">📋 Copy Key</button>
+      </div>
+    </section>
+
+    <!-- Download button section -->
+    <section class="card">
+      <a id="downloadBtn" class="btn primary" href="id_rsa.pub" download>
+        🔑 Download .pub File
+      </a>
+    </section>
+
+    <footer class="foot">
+      <span>Powered by GitHub Pages • 
+        <a href="https://github.com/SreejuZzz/sreejuzzz.github.io" target="_blank" rel="noopener">Repo</a>
+      </span>
+    </footer>
+  </main>
+
+  <!-- Toast notification -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
 
