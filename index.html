@@ -1,41 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sreejith's Public Key</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sreejith — Public SSH Key</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="theme-toggle">
-    <button id="themeButton">🌙</button>
+    <button id="themeToggle" aria-pressed="false" aria-label="Toggle theme">🌙</button>
   </div>
 
-  <main>
-    <h1>🔑 My Public SSH Key</h1>
-    <p class="subtitle">Use this key to grant me access. Private key stays safe 🔒</p>
+  <main class="main">
+    <header class="hero">
+      <h1>🔑 My Public SSH Key</h1>
+      <p class="lead">Share this public key. The private key stays safely offline — don’t be that person.</p>
+    </header>
 
-    <div class="card">
-      <pre id="publicKey">
+    <section class="card">
+      <pre id="publicKey" class="pubkey" tabindex="0">
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILYVphlV3ZxL3pY8/2OPq4WWiB/ieK719iAYZnefize8 sreejuzzz@Sreejiths-Mac-mini.local
       </pre>
-      <div class="buttons">
-        <button id="copyButton">📋 Copy Key</button>
-        <a href="mykey.pub" download class="btn">⬇️ Download</a>
-        <a href="https://sreejithmsreenivas.com" target="_blank" class="btn">🌐 Portfolio</a>
+
+      <div class="actions">
+        <button id="copyBtn" class="btn ghost" type="button">📋 Copy Key</button>
+        <a id="downloadLink" class="btn primary" href="id_rsa.pub" download>⬇️ Download .pub</a>
+        <a class="btn outline" href="https://sreejithmsreenivas.com" target="_blank" rel="noopener">🌐 Portfolio</a>
       </div>
-    </div>
+    </section>
+
+    <footer class="foot">
+      <small>© <span id="year"></span> Sreejith M Sreenivas</small>
+    </footer>
   </main>
 
-  <footer>
-    <p>© <span id="year"></span> Sreejith M Sreenivas</p>
-  </footer>
+  <div id="toast" role="status" aria-live="polite"></div>
 
-  <div id="toast"></div>
-
-  <canvas id="background"></canvas>
-
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
 

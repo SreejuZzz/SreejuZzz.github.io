@@ -1,116 +1,91 @@
-/* Reset & Base */
-* {
-  margin: 0; padding: 0; box-sizing: border-box;
-}
-body {
-  font-family: 'Segoe UI', sans-serif;
-  line-height: 1.6;
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  transition: background 0.3s, color 0.3s;
-}
-:root {
-  --bg: #111; --text: #eee; --card: #1e1e1e;
-  --btn-bg: #333; --btn-hover: #444;
-}
-.light {
-  --bg: #fafafa; --text: #111; --card: #fff;
-  --btn-bg: #ddd; --btn-hover: #ccc;
-}
+// Robust theme toggle + copy + toast
+document.addEventListener('DOMContentLoaded', () => {
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const copyBtn = document.getElementById('copyBtn');
+  const publicKeyEl = document.getElementById('publicKey');
+  const toast = document.getElementById('toast');
+  const yearEl = document.getElementById('year');
 
-/* Layout */
-main {
-  text-align: center;
-  padding: 2rem;
-  z-index: 2;
-  position: relative;
-}
-h1 { font-size: 2.5rem; margin-bottom: .5rem; }
-.subtitle { margin-bottom: 1.5rem; font-size: 1.1rem; opacity: 0.8; }
+  // Set year in footer
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-.card {
-  background: var(--card);
-  padding: 1.5rem;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  max-width: 800px;
-  margin: auto;
-  transition: transform 0.2s;
-}
-.card:hover { transform: scale(1.02) rotateX(2deg) rotateY(2deg); }
+  // ---- Theme initialization ----
+  const saved = localStorage.getItem('theme'); // 'light' | 'dark' | null
+  let initial;
+  if (saved === 'light' || saved === 'dark') {
+    initial = saved;
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    initial = 'light';
+  } else {
+    initial = 'dark';
+  }
+  html.setAttribute('data-theme', initial);
+  updateThemeButton(themeToggle, initial);
 
-pre {
-  background: rgba(0,0,0,0.4);
-  padding: 1rem;
-  border-radius: 10px;
-  overflow-x: auto;
-  font-family: monospace;
-  margin-bottom: 1rem;
-}
+  // Toggle action
+  themeToggle?.addEventListener('click', () => {
+    const cur = html.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    const next = cur === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeButton(themeToggle, next);
+    showToast(`${next[0].toUpperCase() + next.slice(1)} mode`);
+  });
 
-/* Buttons */
-.buttons {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-button, .btn {
-  padding: .7rem 1.2rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background: var(--btn-bg);
-  color: var(--text);
-  font-size: 1rem;
-  transition: transform 0.2s, background 0.2s;
-  text-decoration: none;
-}
-button:hover, .btn:hover {
-  background: var(--btn-hover);
-  transform: translateY(-2px) scale(1.05);
-}
+  // Update toggle icon & aria
+  function updateThemeButton(btn, theme) {
+    if (!btn) return;
+    btn.textContent = theme === 'light' ? '☀️' : '🌙';
+    btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+    btn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+  }
 
-/* Theme Toggle */
-.theme-toggle {
-  position: absolute; top: 20px; right: 20px;
-}
-#themeButton {
-  font-size: 1.3rem;
-  background: var(--btn-bg);
-  border-radius: 50%;
-  width: 45px; height: 45px;
-}
+  // ---- Copy to clipboard ----
+  copyBtn?.addEventListener('click', async () => {
+    const text = publicKeyEl?.innerText.trim();
+    if (!text) return showToast('No key found');
 
-/* Toast */
-#toast {
-  position: fixed; bottom: 30px; left: 50%;
-  transform: translateX(-50%);
-  background: var(--btn-bg);
-  color: var(--text);
-  padding: .8rem 1.2rem;
-  border-radius: 10px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-}
-#toast.show {
-  opacity: 1; transform: translateX(-50%) translateY(-10px);
-}
+    try {
+      await navigator.clipboard.writeText(text);
+      // quick inline feedback: change button briefly
+      const prev = copyBtn.innerHTML;
+      copyBtn.innerHTML = '✅ Copied';
+      showToast('Public key copied to clipboard');
+      setTimeout(() => { copyBtn.innerHTML = prev; }, 1500);
+    } catch (e) {
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showToast('Copied (fallback)'); }
+      catch { showToast('Copy failed'); }
+      document.body.removeChild(ta);
+    }
+  });
 
-/* Footer */
-footer {
-  margin-top: 2rem;
-  opacity: 0.7;
-}
+  // ---- toast helper ----
+  let toastTimer = null;
+  function showToast(msg = '') {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
 
-/* Canvas Background */
-#background {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-}
+  // If user clears localStorage and wants system changes live (optional):
+  // keep listening for OS-level changes and respect saved pref:
+  if (!saved && window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+      // only apply if user hasn't explicitly chosen a theme
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        updateThemeButton(themeToggle, newTheme);
+      }
+    });
+  }
+});
 
