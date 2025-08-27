@@ -1,44 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Public Key</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sreejith's Public Key</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="container">
-    <header class="head">
-      <h1 class="title">My Public Key</h1>
-      <p class="subtitle">You can copy it directly or download the file.</p>
-    </header>
+  <div class="theme-toggle">
+    <button id="themeButton">🌙</button>
+  </div>
 
-    <!-- Public key section -->
-    <section class="card">
-      <pre class="pubkey" id="pubkey">
+  <main>
+    <h1>🔑 My Public SSH Key</h1>
+    <p class="subtitle">Use this key to grant me access. Private key stays safe 🔒</p>
+
+    <div class="card">
+      <pre id="publicKey">
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILYVphlV3ZxL3pY8/2OPq4WWiB/ieK719iAYZnefize8 sreejuzzz@Sreejiths-Mac-mini.local
       </pre>
-      <div class="actions">
-        <button id="copyKeyBtn" class="btn ghost">📋 Copy Key</button>
+      <div class="buttons">
+        <button id="copyButton">📋 Copy Key</button>
+        <a href="mykey.pub" download class="btn">⬇️ Download</a>
+        <a href="https://sreejithmsreenivas.com" target="_blank" class="btn">🌐 Portfolio</a>
       </div>
-    </section>
-
-    <!-- Download button section -->
-    <section class="card">
-      <a id="downloadBtn" class="btn primary" href="id_rsa.pub" download>
-        🔑 Download .pub File
-      </a>
-    </section>
-
-    <footer class="foot">
-      <span>Powered by GitHub Pages • 
-        <a href="https://github.com/SreejuZzz/sreejuzzz.github.io" target="_blank" rel="noopener">Repo</a>
-      </span>
-    </footer>
+    </div>
   </main>
 
-  <!-- Toast notification -->
-  <div id="toast" role="status" aria-live="polite"></div>
+  <footer>
+    <p>© <span id="year"></span> Sreejith M Sreenivas</p>
+  </footer>
+
+  <div id="toast"></div>
+
+  <canvas id="background"></canvas>
 
   <script src="script.js"></script>
 </body>
